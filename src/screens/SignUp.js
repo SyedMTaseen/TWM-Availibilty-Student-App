@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity, KeyboardAvoidingView, Modal } from 'react-native'
 import { Ionicons,MaterialIcons,FontAwesome} from '@expo/vector-icons';
-
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const  fieldErr=`Some Fields are Empty \n Please fill them first`;
 const background = require('../../assets/SignupBackground.png')
 class Signup extends Component {
@@ -18,7 +17,8 @@ class Signup extends Component {
         passwordVal: false,
         facultyVal: false,
         modal:false,
-        errText:''
+        errText:'',
+        scroll:false
     }
 
     getVariable(text, variable) {
@@ -41,8 +41,20 @@ class Signup extends Component {
     }
     render() {
         return (
+            
+            <KeyboardAwareScrollView
+            onKeyboardWillShow={()=>{
+                this.setState({scroll:true})
+            }}
+            // style={styles.container}
+            onKeyboardWillHide={()=>this.setState({scroll:false})}
+            resetScrollToCoords={{ x: 0, y: 0 }}
+            contentContainerStyle={styles.container}
+            scrollEnabled={this.state.scroll}
+            enableAutomaticScroll={true}
+            >
             <ImageBackground
-                style={styles.container}
+                style={styles.imgView}
                 source={background}
                 resizeMode='stretch'
             >
@@ -111,6 +123,7 @@ class Signup extends Component {
                         </Text>
                     </TouchableOpacity>
                 </View>
+              
                 <Modal
                     animationType='fade'
                     transparent={true}
@@ -130,6 +143,7 @@ class Signup extends Component {
                     </View>
                 </Modal>
             </ImageBackground>
+            </KeyboardAwareScrollView>
         )
     }
 
@@ -139,8 +153,11 @@ export default Signup
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        height:'100%',
         marginTop: '5%',
+    },
+    imgView:{
+        flex:1,
     },
     headView: {
         flex: 0.4,
@@ -204,6 +221,7 @@ const styles = StyleSheet.create({
         marginLeft:'9%',
         fontSize: 20,
         color: 'white',
+        textDecorationLine:'underline'
     },
     modalMainView:{
      flex:1,
