@@ -86,7 +86,7 @@ class Signup extends Component {
                     
                 </View>
                 <View style={styles.signinLinkView}>
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('Login')}>
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('SignInScreen')}>
                         <Text style={styles.signinLink}>
                             SignIn
                         </Text>
