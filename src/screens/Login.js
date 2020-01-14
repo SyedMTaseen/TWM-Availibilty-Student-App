@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { StatusBar, View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity, KeyboardAvoidingView,Modal   } from 'react-native'
+import { StatusBar, View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity,Modal   } from 'react-native'
 import { Ionicons,MaterialIcons } from '@expo/vector-icons';
-const background = require('../../assets/LoginBackground.png')
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+const background = require('../../assets/LoginBackground.png') 
 const  fieldErr=`Some Fields are Empty \n Please fill them first`;
 export default class Login extends Component {
   state = {
@@ -11,7 +11,8 @@ export default class Login extends Component {
     emailVal: false,
     passwordVal: false,
     modal:false,
-    errText:''
+    errText:'',
+    scroll:false
   }
 
   getVariable(text, variable) {
@@ -38,11 +39,22 @@ export default class Login extends Component {
 
   render() {
     return (
+      <KeyboardAwareScrollView
+            onKeyboardWillShow={()=>{
+                this.setState({scroll:true})
+            }}
+            onKeyboardWillHide={()=>this.setState({scroll:false})}
+            resetScrollToCoords={{ x: 0, y: 0 }}
+            contentContainerStyle={styles.container}
+            scrollEnabled={this.state.scroll}
+            enableAutomaticScroll={true}
+            >
       <ImageBackground
-        style={styles.container}
+        style={styles.imgView}
         source={background}
       >
-        <View style={styles.headView}>
+       
+          <View style={styles.headView}>
           <Text style={styles.headText}>Welcome{'\n'}Back</Text>
         </View>
         <View style={styles.formView}>
@@ -94,6 +106,9 @@ export default class Login extends Component {
                             </Text>
           </TouchableOpacity>
         </View>
+        
+   
+        
         <Modal
         animationType='fade'
         transparent={true}
@@ -113,13 +128,18 @@ export default class Login extends Component {
                 </View>
         </Modal>
       </ImageBackground>
+           </KeyboardAwareScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height:'100%',
+    marginTop:'5%'
+  },
+  imgView:{
+    flex:1,
   },
   headView: {
     flex: 0.4,
@@ -135,7 +155,6 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderWidth:1,
   },
   inputsView: {
     borderBottomWidth: 1,
@@ -147,7 +166,6 @@ const styles = StyleSheet.create({
     justifyContent:'space-between'
   },
   inputs:{
-    // borderWidth:1,
     width:'90%'
   },
   btnView: {
