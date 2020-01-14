@@ -9,8 +9,9 @@ import { TeacherAvailibilityContainer } from "./TeacherStackNavigator"
 const SwithStartNavigator = createSwitchNavigator({
 
     // Auth: AuthLogin,
+
+    SignInScreen: Login,
     SignUpScreen: SignUp,
-    // SignInScreen: Login,
     // Main: TeacherAvailibilityContainer
 
 
