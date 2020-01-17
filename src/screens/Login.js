@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
-import { StatusBar, View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity,Modal   } from 'react-native'
-import { Ionicons,MaterialIcons } from '@expo/vector-icons';
+import { StatusBar, View, Text, StyleSheet, ImageBackground, TextInput,Dimensions, TouchableOpacity, Modal, Platform,Keyboard,KeyboardAvoidingView, KeyboardAvoidingViewBase } from 'react-native'
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-const background = require('../../assets/LoginBackground.png') 
-const  fieldErr=`Some Fields are Empty \n Please fill them first`;
+const background = require('../../assets/LoginBackground.png')
+const fieldErr = `Some Fields are Empty \n Please fill them first`;
+const screenHeight = Math.round(Dimensions.get('window').height);
+const os = Platform.OS === 'android';
 export default class Login extends Component {
   state = {
     email: '',
     password: '',
     emailVal: false,
     passwordVal: false,
-    modal:false,
-    errText:'',
-    scroll:false
+    modal: false,
+    errText: '',
+    scroll: false,
+    keyboard:false,
   }
 
   getVariable(text, variable) {
@@ -24,40 +27,49 @@ export default class Login extends Component {
     else
       this.setState({ [variable]: false });
   }
-  signIn(){
-    const {email,password} = this.state;
-    if((email===' ' || email=== '') || (password === '' || password===' ')  ){
-      this.setState({errText:fieldErr,modal:true});
+  signIn() {
+    const { email, password } = this.state;
+    if ((email === ' ' || email === '') || (password === '' || password === ' ')) {
+      this.setState({ errText: fieldErr, modal: true });
     }
-    else{
+    else {
       //login function code here
     }
   }
-  forgetPassword(){
-      //forget password code here
+  forgetPassword() {
+    //forget password code here
   }
-
-  render() {
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        ()=>{
+            this.setState({keyboard:true})
+    }
+      );
+      this.keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        ()=>{
+            this.setState({keyboard:false})
+    }       
+      );
+    }
+  
+    componentWillUnmount() {
+      this.keyboardDidShowListener.remove();
+      this.keyboardDidHideListener.remove();
+    }
+  layout() {
     return (
-      <KeyboardAwareScrollView
-            onKeyboardWillShow={()=>{
-                this.setState({scroll:true})
-            }}
-            onKeyboardWillHide={()=>this.setState({scroll:false})}
-            resetScrollToCoords={{ x: 0, y: 0 }}
-            contentContainerStyle={styles.container}
-            scrollEnabled={this.state.scroll}
-            enableAutomaticScroll={true}
-            >
       <ImageBackground
         style={styles.imgView}
         source={background}
-      >
-       
-          <View style={styles.headView}>
+        resizeMode='stretch'
+        imageStyle={ os ? (this.state.keyboard) ? styles.keyImgStyleView : styles.ImageStyleView : 'none' }
+     >
+        <View style={(this.state.keyboard && os) ? styles.keyHeadView :styles.headView }>
           <Text style={styles.headText}>Welcome{'\n'}Back</Text>
         </View>
-        <View style={styles.formView}>
+        <View style={(this.state.keyboard && os ) ? styles.keyFormView : styles.formView}>
           <View style={styles.inputsView}>
             <TextInput
               onBlur={(e) => this.showErr('emailVal', this.state.email)}
@@ -65,7 +77,7 @@ export default class Login extends Component {
               style={styles.inputs}
               placeholderTextColor="#777777"
               placeholder='NU Email' />
-              <MaterialIcons name='email' size={25} color='#2B7C87'/>
+            <MaterialIcons name='email' size={25} color='#2B7C87' />
           </View>
           <Text style={this.state.emailVal ? styles.unhide : styles.hide}>Email cannot be left empty</Text>
           <View style={styles.inputsView}>
@@ -76,22 +88,22 @@ export default class Login extends Component {
               secureTextEntry={true}
               placeholderTextColor="#777777"
               placeholder='Password' />
-              <Ionicons name='ios-lock' size={25} color='#2B7C87'/>
+            <Ionicons name='ios-lock' size={25} color='#2B7C87' />
           </View>
           <Text style={this.state.passwordVal ? styles.unhide : styles.hide}>Password cannot be left empty</Text>
 
 
           <View style={styles.btnView}>
             <Text style={styles.btnText}>Sign In</Text>
-            <TouchableOpacity 
-            onPress={this.signIn.bind(this)}
-            style={styles.btn}>
+            <TouchableOpacity
+              onPress={this.signIn.bind(this)}
+              style={styles.btn}>
               <Ionicons color='#2B7C87' name='ios-arrow-dropright-circle' size={70} />
             </TouchableOpacity>
           </View>
 
         </View>
-        <View style={styles.signupLinkView}>
+        <View style={(this.state.keyboard && os )? styles.keySignupLinkView :styles.signupLinkView}>
           <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUpScreen')}>
             <Text style={styles.signinLink}>
               Sign Up
@@ -99,60 +111,95 @@ export default class Login extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-          onPress={this.forgetPassword.bind(this)}
+            onPress={this.forgetPassword.bind(this)}
           >
             <Text style={styles.signinLink}>
               Forget Password
                             </Text>
           </TouchableOpacity>
         </View>
-        
-   
-        
         <Modal
-        animationType='fade'
-        transparent={true}
-        visible={this.state.modal}>
+          animationType='fade'
+          transparent={true}
+          visible={this.state.modal}>
           <View style={styles.modalMainView}></View>
-                <View style={styles.modalView}>
-                  <MaterialIcons name='error' color='#2B7C87' size={50}/> 
-                  <Text style={styles.modalText}>{this.state.errText}</Text>
-                  <TouchableOpacity
-                  style={styles.modalBtn}
-                  onPress={()=>this.setState({modal:false})}
-                  >
-                    <Text style={styles.modalBtnText}>
-                        Ok
+          <View style={styles.modalView}>
+            <MaterialIcons name='error' color='#2B7C87' size={50} />
+            <Text style={styles.modalText}>{this.state.errText}</Text>
+            <TouchableOpacity
+              style={styles.modalBtn}
+              onPress={() => this.setState({ modal: false })}
+            >
+              <Text style={styles.modalBtnText}>
+                Ok
                     </Text>
-                  </TouchableOpacity>
-                </View>
+            </TouchableOpacity>
+          </View>
         </Modal>
       </ImageBackground>
-           </KeyboardAwareScrollView>
-    );
+
+    )
+  }
+  render() {
+    if (Platform.OS === 'ios') {
+      return <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          onKeyboardWillShow={() => {
+            this.setState({ scroll: true })
+          }}
+          onKeyboardWillHide={() => this.setState({ scroll: false })}
+          resetScrollToCoords={{ x: 0, y: 0 }}
+          contentContainerStyle={styles.container}
+          scrollEnabled={this.state.scroll}
+          enableAutomaticScroll={(Platform.OS === 'ios')}
+        >
+          {this.layout()}
+        </KeyboardAwareScrollView>
+    }
+    else{
+      return <KeyboardAvoidingView style={styles.container} behavior='padding'>
+          {this.layout()}
+        </KeyboardAvoidingView> 
+  }
+      
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    height:'100%',
-    marginTop:'5%'
-  },
-  imgView:{
     flex:1,
+    marginTop: '5%'
+  },
+  imageStyleView:{
+    height:screenHeight,
+  },
+  keyImgStyleView:{
+    height:'100%',
+  },
+  imgView: {
+    flex: 1,
   },
   headView: {
     flex: 0.4,
     justifyContent: 'center',
   },
+  keyHeadView:{
+    flex:0.4,
+    justifyContent:'center',
+  },
   headText: {
     fontSize: 30,
     color: 'white',
     marginLeft: '12%',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   formView: {
     flex: 0.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  keyFormView:{
+    flex: 0.8,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -162,11 +209,11 @@ const styles = StyleSheet.create({
     width: '80%',
     padding: 10,
     margin: 10,
-    flexDirection:'row',
-    justifyContent:'space-between'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
-  inputs:{
-    width:'90%'
+  inputs: {
+    width: '90%'
   },
   btnView: {
     flex: 0.5,
@@ -181,12 +228,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     flex: 0.8,
-    marginLeft:'10%'
+    marginLeft: '10%'
   },
   unhide: {
     display: 'flex',
     color: '#d66278',
-    fontSize:12
+    fontSize: 12
   },
   hide: {
     display: 'none',
@@ -196,47 +243,48 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // borderWidth:1,
+  },
+  keySignupLinkView:{
+    display:"none",
   },
   signinLink: {
     fontSize: 17,
     color: 'black',
     fontWeight: '500',
-    marginLeft:'13%',
-    paddingLeft:'13%', 
-    // borderWidth:1,
-    textDecorationLine:'underline'
+    marginLeft: '13%',
+    paddingLeft: '13%',
+    textDecorationLine: 'underline'
   },
-  modalMainView:{
-   flex:1,
-   borderWidth:1,
-   opacity:0.7,
-   backgroundColor:'black'
+  modalMainView: {
+    flex: 1,
+    borderWidth: 1,
+    opacity: 0.7,
+    backgroundColor: 'black'
   },
-  modalView:{
-    position:'absolute',
-    backgroundColor:'white',
-    alignSelf:'center',
-    top:'30%',
-    bottom:'30%',
-    width:'80%',
-    height:'30%',
-    justifyContent:'center',
-    alignItems:'center'
+  modalView: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    alignSelf: 'center',
+    top: '30%',
+    bottom: '30%',
+    width: '80%',
+    height: '35%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  modalText:{
-    fontSize:20,
-    padding:20,
-    textAlign:'center'
+  modalText: {
+    fontSize: 20,
+    padding: 20,
+    textAlign: 'center'
   },
-  modalBtn:{
-    backgroundColor:'#2B7C87',
-    paddingHorizontal:30,
-    paddingVertical:10
+  modalBtn: {
+    backgroundColor: '#2B7C87',
+    paddingHorizontal: 30,
+    paddingVertical: 10
   },
-  modalBtnText:{
-    color:'white',
-    fontSize:17
+  modalBtnText: {
+    color: 'white',
+    fontSize: 17
   }
 
 
