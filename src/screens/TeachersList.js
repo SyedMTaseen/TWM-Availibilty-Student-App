@@ -43,15 +43,25 @@ class TeachersList extends Component {
 
   // }
 
+  PassTeacherItem = (item) => {
+    this.props.navigation.navigate('TeachersAvailibility')
+  }
   render() {
     return (
       <View style={{ flex: 1, marginTop: '4%' }}>
 
         <View style={{ flex: 1, }}>
           <View style={{ justifyContent: 'center', marginTop: '7%', paddingHorizontal: '7%' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>
-              Find Teachers'
+            <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>
+                Find Teachers'
                         </Text>
+              <TouchableOpacity>
+                <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#d66278' }}>
+                  Logout
+                        </Text>
+              </TouchableOpacity>
+            </View>
             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
               Availability
                         </Text>
@@ -73,7 +83,7 @@ class TeachersList extends Component {
             data={this.state.DATA}
             renderItem={({ item }) =>
               <View style={{ marginBottom: '7%' }}>
-                <TouchableOpacity style={{ height: 55, width: '100%', backgroundColor: 'white', borderRadius: 20, justifyContent: "center" }}>
+                <TouchableOpacity style={{ height: 55, width: '100%', backgroundColor: 'white', borderRadius: 20, justifyContent: "center" }} onPress={() => { this.PassTeacherItem(item) }}>
                   <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: '7%' }}>
                     {item.name}
                   </Text>

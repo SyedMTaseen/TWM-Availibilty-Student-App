@@ -168,7 +168,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    marginTop: '5%'
+    // marginTop: '5%'
   },
   imageStyleView:{
     height:screenHeight,
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnText: {
-    fontSize: 25,
+    fontSize: 24,
     fontWeight: 'bold',
     color: 'black',
     flex: 0.8,
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     display:"none",
   },
   signinLink: {
-    fontSize: 17,
+    fontSize: 16,
     color: 'black',
     fontWeight: '500',
     marginLeft: '13%',

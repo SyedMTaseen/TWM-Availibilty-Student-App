@@ -90,7 +90,7 @@ export default class Signup extends Component {
                     <View style={this.state.keyboard && os ? styles.keySigninLinkView : styles.signinLinkView}>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('SignInScreen')}>
                             <Text style={styles.signinLink}>
-                                SignIn
+                                Sign In
                         </Text>
                         </TouchableOpacity>
                     </View>
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     btnText: {
-        fontSize: 25,
+        fontSize: 24,
         color: 'white',
         width: '73%',
         marginLeft: '7%',
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     },
     signinLink: {
         marginLeft: '9%',
-        fontSize: 20,
+        fontSize: 16,
         color: 'white',
         textDecorationLine: 'underline'
     },
