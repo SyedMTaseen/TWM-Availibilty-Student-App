@@ -13,7 +13,7 @@ import {
 }
     from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-
+import TabNavg from '../navigations/TabView'
 
 class TeachersAvailibility extends Component {
 
@@ -36,7 +36,7 @@ class TeachersAvailibility extends Component {
             ThursdayActive: false,
             FridayActive: false,
             index: 0,
-            active:'MondayActive'
+            active: 'MondayActive'
         })
     }
 
@@ -96,105 +96,59 @@ class TeachersAvailibility extends Component {
         }
     }
 
+    momentumEnd() {
+        if (this.state.index < 5 && this.state.index >= 0) {
+            var arr = ['MondayActive', 'TuesdayActive', 'WednesdayActive', 'ThursdayActive', 'FridayActive'];
+            this.setState({
+                MondayActive: false,
+                TuesdayActive: false,
+                WednesdayActive: false,
+                ThursdayActive: false,
+                FridayActive: false
+            })
+            this.setState({ [arr[this.state.index]]: true, active: arr[this.state.index] })
+        }
+    }
+
+    momentBegin() {
+        var interval = 140;
+        var snapTo = (this.scrollingRight) ? Math.ceil(this.lastx / interval) :
+            Math.floor(this.lastx / interval);
+        var scrollTo = interval * snapTo;
+        this.setState({ index: snapTo })
+        if (snapTo <= 4 && snapTo > -2)
+            this.snapScroll.scrollTo(0, scrollTo);
+    }
+
     render() {
         return (
             <View style={{ flex: 1, marginTop: '8%', backgroundColor: '#F0F0F0' }}>
-                <View style={{ flex: 1, backgroundColor: 'white' }}>
-                    <View style={{ justifyContent: 'center', marginTop: '10%', paddingHorizontal: '10%' }}>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>
+                <View style={{ flex: 0.2, backgroundColor: 'white' }}>
+                    <View style={{ flex:0.5,justifyContent: 'center', marginTop: '10%', paddingHorizontal: '10%' }}>
+                        <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#777777' }}>
                             Your
                         </Text>
                     </View>
-                    <View style={{ paddingHorizontal: '13%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: '30%', paddingHorizontal: '10%' }}>
-                        <Text style={{ fontSize: 24, fontWeight: 'bold', }}>
+                    <View style={{ flex:0.5,paddingHorizontal: '13%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: '30%', paddingHorizontal: '10%' }}>
+                        <Text style={{ fontSize: 30, fontWeight: 'bold', }}>
                             Availability
                         </Text>
                         <TouchableOpacity>
                             <View style={{ height: '50%', backgroundColor: '#C4C4C4', borderRadius: 20, alignItems: 'center', justifyContent: 'center', }}>
-                                <Text style={{ fontSize: 9, color: '#2B7C87', padding: 6 }}>
+                                <Text style={{ fontSize: 12, color: '#2B7C87', padding: 6 }}>
                                     Mark Whole Day Unavailable
                                 </Text>
                             </View>
                         </TouchableOpacity>
                     </View>
                     <View style={{ height: "3%", }}></View>
-                    <ScrollView
-                        ref={(snapScroll) => { this.snapScroll = snapScroll; }}
-                        horizontal={true}
-                        decelerationRate={0}
-                        onMomentumScrollBegin={() => {
-                            var interval = 140; 
-                            var snapTo = (this.scrollingRight) ? Math.ceil(this.lastx / interval) :
-                                Math.floor(this.lastx / interval);
-                            var scrollTo =  interval*snapTo;
-                            this.setState({index:snapTo})
-                            if(snapTo<=4 && snapTo>-2)
-                            this.snapScroll.scrollTo(0,scrollTo);
-                        }}
-                        onMomentumScrollEnd={()=>{
-                            var arr = ['MondayActive','TuesdayActive','WednesdayActive','ThursdayActive','FridayActive'];
-                            if(this.state.index<5 && this.state.index>=0){
-                                
-                            this.setState({
-                                MondayActive: false,
-                                TuesdayActive: false,
-                                WednesdayActive: false,
-                                ThursdayActive: false,
-                                FridayActive: false
-                            })
-                            this.setState({[arr[this.state.index]] :true, active:arr[this.state.index]})
-                        }
-                        }}
-                        scrollEventThrottle={32}
-                        onScroll={(event) => {
-                            var nextx = event.nativeEvent.contentOffset.x;
-                            this.scrollingRight = (nextx > this.lastx);
-                            this.lastx = nextx;
-                        }}
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.listViewHorizontal}
-                    >
-                        {['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', ''].map((e, i) => {
-                            
-                            var active = e+'Active';
-                            // console.log(active,'active');
-                            return <TouchableOpacity onPress={()=>{
-                                var arr = ['MondayActive','TuesdayActive','WednesdayActive','ThursdayActive','FridayActive'];
-                                this.setState({
-                                    MondayActive: false,
-                                    TuesdayActive: false,
-                                    WednesdayActive: false,
-                                    ThursdayActive: false,
-                                    FridayActive: false
-                                })
-                                this.setState({[arr[i-1]]:true,active:arr[i-1],index:i-1});
-                                var scrollto = 140 * (i-1) ;
-                                this.snapScroll.scrollTo(0,scrollto);
-                            }} 
-                            style={styles.dayView} key={i}>
-                                <Text style={{fontSize:20,flex:1,textAlign:'center',fontWeight:this.state.active===active?'bold':'300' }}>{e}</Text>
-                            </TouchableOpacity>
-                        })
-                        }
-                    </ScrollView>
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Entypo name='dot-single' size={30} color='black' />
-                    </View>
+
+
                 </View>
-                <View style={{ flex: 2.5, backgroundColor: '#F0F0F0', }}>
-                    <FlatList showsVerticalScrollIndicator={false}
-                        data={this.state.DATA}
-                        keyExtractor={(item, index) => item.id}
-                        renderItem={({ item }) =>
-                            <View style={{ marginTop: '8%' }}>
-                                <TouchableOpacity style={{ width: '90%', height: 90, backgroundColor: 'white', borderRadius: 20, alignItems: 'center', justifyContent: "center", elevation: 5, alignSelf: 'center' }}>
-                                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
-                                        {item.time}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        } />
+                <View style={{flex:0.7,}}>
+                <TabNavg style={{height:'70%'}}/>
                 </View>
+                
             </View>
         );
     }
