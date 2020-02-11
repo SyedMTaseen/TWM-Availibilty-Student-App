@@ -8,7 +8,9 @@ import {
     Button,
     TouchableOpacity,
     ScrollView,
-    FlatList
+    FlatList,
+    ActivityIndicator,
+    AsyncStorage
 }
     from 'react-native';
 
@@ -45,37 +47,53 @@ class TeachersAvailibility extends Component {
             WednesdayActive: false,
             ThursdayActive: false,
             FridayActive: false,
-            TestData: [
-                { "teacher_availability": { "day": "Monday", "slot": "08:00 AM - 09:00 AM" } },
-                { "teacher_availability": { "day": "Monday", "slot": "09:00 AM - 10:00 AM" } },
-                { "teacher_availability": { "day": "Tuesday", "slot": "12:00 PM - 01:00 PM" } }]
+            activeDay: "",
+            loading: false,
+            DaysList: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            TeacherId: 1,
         })
     }
-    componentDidMount = () => {
-        link = "http://192.168.15.34/TWM_Api/fetchTeacherAvailibilityViaId.php?teacher_id=1"
+    componentDidMount = async () => {
+        const TeacherID = await AsyncStorage.getItem('AVATeacherID');
+        this.setState({ TeacherId: TeacherID }, () => {
+            var d = new Date();
+            var n = d.getDay();
+            console.log(n)
+            if (n.length > 5) {
+                this.fetchdata("Monday")
+            } else {
+                console.log(this.state.DaysList[n - 1])
+                this.fetchdata(this.state.DaysList[n - 1])
+            }
+
+        })
+
+
+
+    }
+    fetchdata = async (day) => {
+        this.setState({ loading: true })
+        link = "http://192.168.15.34/TWM_Api/fetchTeacherAvailibilityViaId.php?teacher_id="+this.state.TeacherId
         console.log(link)
         axios.get(link).then((result) => {
-            console.log(result.data)
+            // console.log(result.data)
             var listData = []
             var len = result.data.server_response.length
             for (var i = 0; i < len; i++) {
                 listData.push(result.data.server_response[i].teacher_availability)
             }
-            console.log(listData)
+            //   console.log(listData)
 
             this.setState({ TotalData: listData })
-            this.CalculateListActive("Monday")
-
-
-
-
+            this.changecolor(day)
 
         })
+
     }
     CalculateListActive = (Day) => {
         var newData = []
         var len = this.state.TotalData.length
-        var Update=false
+        var Update = false
         var lens = this.state.DefaultDATA.length
         for (var j = 0; j < lens; j++) {
 
@@ -83,19 +101,19 @@ class TeachersAvailibility extends Component {
                 if (this.state.DefaultDATA[j].time == this.state.TotalData[i].slot && this.state.TotalData[i].day == Day) {
                     var itemData = { id: this.state.DefaultDATA[j].id, time: this.state.DefaultDATA[j].time, active: true }
                     newData.push(itemData)
-                    Update=true
+                    Update = true
                 }
             }
-            if(!Update){
+            if (!Update) {
                 newData.push(this.state.DefaultDATA[j])
-               
+
             }
-            Update=false
+            Update = false
         }
 
-        console.log("hello")
-        this.setState({ DATA: newData })
-        console.log(newData)
+        //  console.log("hello")
+        this.setState({ DATA: newData, loading: false })
+        //  console.log(newData)
     }
 
 
@@ -152,9 +170,35 @@ class TeachersAvailibility extends Component {
 
                 })
         }
+        this.setState({ activeDay: day })
         this.CalculateListActive(day)
     }
 
+    onPressCard = (item) => {
+        var Day = this.state.activeDay
+        var Slot = item.time
+
+        if (item.active) {
+            link = "http://192.168.15.34/TWM_Api/deleteAvailability.php?teacher_id="+this.state.TeacherId+"&day=" + Day + "&slot=" + Slot
+            console.log(link)
+            axios.get(link).then((result) => {
+                console.log(result.data)
+                this.fetchdata(Day)
+            })
+            //  alert(Slot+" deleted "+Day)
+
+        } else {
+            link = "http://192.168.15.34/TWM_Api/insertAvailability.php?teacher_id="+this.state.TeacherId+"&day=" + Day + "&slot=" + Slot
+            console.log(link)
+            axios.get(link).then((result) => {
+                console.log(result.data)
+                this.fetchdata(Day)
+            })
+            // alert(Slot+" Added "+Day)
+        }
+
+
+    }
     render() {
         return (
             <View style={{ flex: 1, marginTop: '8%', backgroundColor: '#F0F0F0' }}>
@@ -173,13 +217,13 @@ class TeachersAvailibility extends Component {
                         <Text style={{ fontSize: 24, fontWeight: 'bold', fontFamily: 'Roboto' }}>
                             Availability
                         </Text>
-                        <TouchableOpacity>
+                        {/* <TouchableOpacity>
                             <View style={{ height: '50%', backgroundColor: '#C4C4C4', borderRadius: 20, alignItems: 'center', justifyContent: 'center', }}>
                                 <Text style={{ fontSize: 9, color: '#2B7C87', padding: 6 }}>
                                     Mark Whole Day Unavailable
                                 </Text>
                             </View>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={{ height: "3%" }}></View>
                     <ScrollView contentContainerStyle={{ paddingLeft: '10%' }} horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -227,18 +271,21 @@ class TeachersAvailibility extends Component {
                     </ScrollView>
                 </View>
                 <View style={{ flex: 2.5, backgroundColor: '#F0F0F0', }}>
-                    <FlatList showsVerticalScrollIndicator={false}
-                        data={this.state.DATA}
-                        keyExtractor={(item, index) => item.id}
-                        renderItem={({ item }) =>
-                            <View style={{ marginTop: '8%' }}>
-                                <TouchableOpacity style={{ width: '90%', height: 90, backgroundColor:item.active?"#2B7C87": 'white', borderRadius: 20, alignItems: 'center', justifyContent: "center", elevation: 5, alignSelf: 'center' }}>
-                                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
-                                        {item.time}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        } />
+                    {this.state.loading ? <ActivityIndicator size='large' color="#0ca9dd" /> :
+                        <FlatList showsVerticalScrollIndicator={false}
+                            data={this.state.DATA}
+                            keyExtractor={(item, index) => item.id}
+                            renderItem={({ item }) =>
+                                <View style={{ marginTop: '8%' }}>
+                                    <TouchableOpacity
+                                        onPress={() => { this.onPressCard(item) }}
+                                        style={{ width: '90%', height: 90, backgroundColor: item.active ? "#2B7C87" : 'white', borderRadius: 20, alignItems: 'center', justifyContent: "center", elevation: 5, alignSelf: 'center' }}>
+                                        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                                            {item.time}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            } />}
                 </View>
             </View>
         );
