@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StatusBar, View, Text, StyleSheet, ImageBackground, TextInput,Dimensions, TouchableOpacity, Modal, Platform,Keyboard,KeyboardAvoidingView, KeyboardAvoidingViewBase } from 'react-native'
+import { StatusBar, View, Text, StyleSheet, ImageBackground, TextInput,Dimensions, TouchableOpacity, Modal, Platform,Keyboard,KeyboardAvoidingView, KeyboardAvoidingViewBase ,AsyncStorage} from 'react-native'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const background = require('../../assets/LoginBackground.png')
 const fieldErr = `Some Fields are Empty \n Please fill them first`;
 const screenHeight = Math.round(Dimensions.get('window').height);
+import axios from 'axios';
 const os = Platform.OS === 'android';
 export default class Login extends Component {
   state = {
@@ -30,11 +31,44 @@ export default class Login extends Component {
   signIn() {
     const { email, password } = this.state;
     if ((email === ' ' || email === '') || (password === '' || password === ' ')) {
-      this.setState({ errText: fieldErr, modal: true });
+      this.setState({ errText: "Some Fields are Empty \n Please fill them first", modal: true });
     }
     else {
       //login function code here
+      link = "http://192.168.15.34/TWM_Api/fetchTeacherId.php?name="+email+"&password="+password
+      console.log(link)
+      axios.get(link).then((result) => {
+        console.log(result.data)
+        if(result.data.server_response=="")
+        {
+          this.setState({ errText: "Wrong email or password\n Please try again", modal: true });
+        }else{
+               var TeacherID=result.data.server_response[0].teacher_detail.teacher_id
+               console.log(TeacherID)
+               this._storeData(TeacherID)
+
+   
+        }
+
+
+
+      })
     }
+  }
+  _storeData = async (id) => {
+
+   
+    try {
+
+      await AsyncStorage.setItem('AVATeacherID', id);
+
+      this.setState({ loading: false })
+      this.props.navigation.navigate('Main')
+     
+    } catch (error) {
+     
+    }
+
   }
   forgetPassword() {
     //forget password code here
@@ -75,6 +109,7 @@ export default class Login extends Component {
               onBlur={(e) => this.showErr('emailVal', this.state.email)}
               onChangeText={(e) => this.getVariable(e, 'email')}
               style={styles.inputs}
+              autoCapitalize="none"
               placeholderTextColor="#777777"
               placeholder='NU Email' />
             <MaterialIcons name='email' size={25} color='#2B7C87' />
@@ -85,6 +120,7 @@ export default class Login extends Component {
               onBlur={(e) => this.showErr('passwordVal', this.state.password)}
               onChangeText={(e) => this.getVariable(e, 'password')}
               style={styles.inputs}
+              autoCapitalize="none"
               secureTextEntry={true}
               placeholderTextColor="#777777"
               placeholder='Password' />
@@ -103,7 +139,7 @@ export default class Login extends Component {
           </View>
 
         </View>
-        <View style={(this.state.keyboard && os )? styles.keySignupLinkView :styles.signupLinkView}>
+        {/* <View style={(this.state.keyboard && os )? styles.keySignupLinkView :styles.signupLinkView}>
           <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUpScreen')}>
             <Text style={styles.signinLink}>
               Sign Up
@@ -117,7 +153,7 @@ export default class Login extends Component {
               Forget Password
                             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <Modal
           animationType='fade'
           transparent={true}

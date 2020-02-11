@@ -13,18 +13,18 @@ class AuthLogin extends React.Component {
     }
 
      async componentDidMount() {
-        // const customerID = await AsyncStorage.getItem('AVAStudentID');
+        const TeacherID = await AsyncStorage.getItem('AVATeacherID');
 
  
-        //     if(customerID=="asd")
-        //     {
-        //         this.props.navigation.navigate('SignInScreen')
-        //     }
-        //     else{
-        //         this.props.navigation.navigate('Swiper')
-        //     }
+            if(TeacherID=="asd"||TeacherID==""||TeacherID==null)
+            {
+                this.props.navigation.navigate('SignInScreen')
+            }
+            else{
+                this.props.navigation.navigate('Main')
+            }
      
-        this.props.navigation.navigate('Login')
+     
     }
 
  
