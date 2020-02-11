@@ -22,6 +22,8 @@ class TeachersAvailibility extends Component {
     constructor(props) {
         super(props);
         this.state = ({
+            TeacherID: this.props.navigation.getParam('it', 'Something').teacher_id,
+            TeacherName: this.props.navigation.getParam('it', 'Something').name,
             DefaultDATA: [
                 { id: '1', time: '08:00 AM - 09:00 AM', active: false },
                 { id: '2', time: '09:00 AM - 10:00 AM', active: false },
@@ -132,7 +134,7 @@ class TeachersAvailibility extends Component {
         );
 
     }
-    logout = async (props) => {
+    logout = async () => {
 
         try {
 
@@ -236,13 +238,13 @@ class TeachersAvailibility extends Component {
                 <View style={{ flex: 1, backgroundColor: 'white' }}>
                     <View style={{ marginTop: '10%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>
-                            Your
+                            {this.state.TeacherName}
                         </Text>
-                        <TouchableOpacity onPress={this.LogoutAskAlert}>
+                        {/* <TouchableOpacity onPress={this.LogoutAskAlert}>
                             <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#d66278', paddingRight: '3%' }}>
                                 Logout
                         </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={{ paddingHorizontal: '13%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: '30%', paddingHorizontal: '10%' }}>
                         <Text style={{ fontSize: 24, fontWeight: 'bold', fontFamily: 'Roboto' }}>
@@ -308,13 +310,15 @@ class TeachersAvailibility extends Component {
                             keyExtractor={(item, index) => item.id}
                             renderItem={({ item }) =>
                                 <View style={{ marginTop: '8%' }}>
-                                    <TouchableOpacity
-                                        onPress={() => { this.onPressCard(item) }}
+                                <View
+                              
+                                     //   onPress={() => { this.onPressCard(item) }}
                                         style={{ width: '90%', height: 90, backgroundColor: item.active ? "#2B7C87" : 'white', borderRadius: 20, alignItems: 'center', justifyContent: "center", elevation: 5, alignSelf: 'center' }}>
                                         <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
                                             {item.time}
                                         </Text>
-                                    </TouchableOpacity>
+                           
+                                 </View>
                                 </View>
                             } />}
                 </View>

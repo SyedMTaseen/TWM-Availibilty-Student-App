@@ -27,31 +27,31 @@ class TeachersList extends Component {
         { id: 2, name: 'Sir Syed Muhammad Maaz', subject: 'Anime' },
       ],
       FullData: [],
-      DATAS:[]
+      DATAS: []
     })
   }
-  componentDidMount=()=>{
-  
+  componentDidMount = () => {
+
     link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeachersList.php"
     console.log(link)
     axios.get(link).then((result) => {
       console.log(result.data)
-      var listData=[]
-       var len =result.data.server_response.length
-       for(var i=0;i<len;i++){
+      var listData = []
+      var len = result.data.server_response.length
+      for (var i = 0; i < len; i++) {
         listData.push(result.data.server_response[i].teacher_detail)
-       }
-       console.log(listData)
+      }
+      console.log(listData)
 
-      this.setState({DATAS:listData,FullData:listData})
+      this.setState({ DATAS: listData, FullData: listData })
 
-      
+
     })
     // console.log(this.state.DATAS)
   }
   contains = ({ name }, query) => {
 
-    if (name.toLowerCase().includes(query.toLowerCase()) ) {
+    if (name.toLowerCase().includes(query.toLowerCase())) {
       return true;
     }
     return false;
@@ -60,14 +60,16 @@ class TeachersList extends Component {
 
   searchData = text => {
     const data = _.filter(this.state.FullData, DATAS => { return this.contains(DATAS, text); })
-    this.setState({ query: text, DATAS: data,  });
+    this.setState({ query: text, DATAS: data, });
 
   }
 
-  
+
 
   PassTeacherItem = (item) => {
-    this.props.navigation.navigate('TeachersAvailibility')
+    this.props.navigation.navigate('TeachersAvailibility', {
+      it: item,
+    });
   }
   render() {
     return (
@@ -92,7 +94,7 @@ class TeachersList extends Component {
           <View style={{ height: "20%" }}></View>
           <View style={{ marginHorizontal: '7%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#F0F0F0', borderRadius: 20, paddingHorizontal: '4%', height: "20%" }}>
             <TextInput style={{ height: '100%', width: '70%', fontSize: 16, fontWeight: 'bold', color: '#777777', }}
-               onChangeText={this.searchData}
+              onChangeText={this.searchData}
               placeholder='Search' >
 
             </TextInput>
@@ -102,32 +104,32 @@ class TeachersList extends Component {
 
         </View>
         <View style={{ flex: 2.5, backgroundColor: '#F0F0F0', paddingTop: '8%', paddingHorizontal: '7%' }}>
-         
-        {this.state.DATAS.length <= 0 ? <View style={{ flex: 0.3, alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={{
-                                  
-                                    fontSize: 18.6,
-                                    fontWeight: "800",
-                                    fontStyle: "normal",
-                                    color: "#444444",
-                                    alignSelf: 'center'
-                                }}>We couldn't find anything.</Text>
-                            </View> :
-          <FlatList showsVerticalScrollIndicator={false}
-            data={this.state.DATAS}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) =>
-              <View style={{ marginBottom: '7%' }}>
-                <TouchableOpacity style={{ height: 55, width: '100%', backgroundColor: 'white', borderRadius: 20, justifyContent: "center" }} onPress={() => { this.PassTeacherItem(item) }}>
-                  <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: '7%' }}>
-                    {item.name}
-                  </Text>
-                  <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2B7C87', paddingHorizontal: '7%' }}>
-                    {item.department}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            } />}
+
+          {this.state.DATAS.length <= 0 ? <View style={{ flex: 0.3, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{
+
+              fontSize: 18.6,
+              fontWeight: "800",
+              fontStyle: "normal",
+              color: "#444444",
+              alignSelf: 'center'
+            }}>We couldn't find anything.</Text>
+          </View> :
+            <FlatList showsVerticalScrollIndicator={false}
+              data={this.state.DATAS}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) =>
+                <View style={{ marginBottom: '7%' }}>
+                  <TouchableOpacity style={{ height: 55, width: '100%', backgroundColor: 'white', borderRadius: 20, justifyContent: "center" }} onPress={() => { this.PassTeacherItem(item) }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: '7%' }}>
+                      {item.name}
+                    </Text>
+                    <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2B7C87', paddingHorizontal: '7%' }}>
+                      {item.department}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              } />}
         </View>
       </View>
     );
