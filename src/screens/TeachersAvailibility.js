@@ -132,7 +132,7 @@ class TeachersAvailibility extends Component {
         );
 
     }
-    logout = async (props) => {
+    logout = async () => {
 
         try {
 
@@ -232,7 +232,7 @@ class TeachersAvailibility extends Component {
     }
     render() {
         return (
-            <View style={{ flex: 1, marginTop: '8%', backgroundColor: '#F0F0F0' }}>
+            <View style={{ flex: 1, marginTop: '1%', backgroundColor: '#F0F0F0' }}>
                 <View style={{ flex: 1, backgroundColor: 'white' }}>
                     <View style={{ marginTop: '10%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>

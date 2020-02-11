@@ -5,14 +5,14 @@ import TeachersAvailibility from "../screens/TeachersAvailibility"
 
 /** Signup Screen */
 const TeachersAvailibilityStackNavigator = createStackNavigator({
-    TeacherList: {
-      screen: TeachersList,
-      navigationOptions: ({ navigation }) => ({
+    // TeacherList: {
+    //   screen: TeachersList,
+    //   navigationOptions: ({ navigation }) => ({
   
-        headerTransparent: true,
+    //     headerTransparent: true,
   
-      })
-    },
+    //   })
+    // },
     TeachersAvailibility: {
       screen: TeachersAvailibility,
       navigationOptions: ({ navigation }) => ({
@@ -26,7 +26,7 @@ const TeachersAvailibilityStackNavigator = createStackNavigator({
   
   
   }, {
-    initialRouteName: 'TeacherList',
+    initialRouteName: 'TeachersAvailibility',
     //transitionConfig: () => fromTop(500),
   })
   export const TeacherAvailibilityContainer=createAppContainer(TeachersAvailibilityStackNavigator);

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Avaiblibilty",
+    "name": "Ustad",
     "slug": "AvaiblityStudentApp",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -21,7 +21,7 @@
       "fallbackToCacheTimeout": 0
     },
      "android": {
-      "package": "com.skynners.TWMStudent",
+      "package": "com.skynners.TWMTeacher",
       "versionCode": 1
       
       
@@ -32,7 +32,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.skynners.TWMStudent",
+      "bundleIdentifier": "com.skynners.TWMTeacher",
       "buildNumber": "1"
     }
   }
