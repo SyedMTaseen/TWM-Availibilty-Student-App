@@ -32,7 +32,7 @@ class TeachersList extends Component {
   }
   componentDidMount=()=>{
   
-    link = "http://192.168.15.34/TWM_Api/fetchTeachersList.php"
+    link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeachersList.php"
     console.log(link)
     axios.get(link).then((result) => {
       console.log(result.data)
@@ -123,7 +123,7 @@ class TeachersList extends Component {
                     {item.name}
                   </Text>
                   <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2B7C87', paddingHorizontal: '7%' }}>
-                    {/* {item.subject} */}
+                    {item.department}
                   </Text>
                 </TouchableOpacity>
               </View>

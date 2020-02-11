@@ -40,7 +40,7 @@ ${error.stack}`));
       <View style={{ flex: 1 }}>
         {this.state.Notactive ? <Image
           style={{ width: width, height: height, alignSelf: 'center', }}
-          source={require('./assets/splash.png')}
+          source={require('./assets/splash2.png')}
           onLoadEnd={() => {
             // wait for image's content to fully load [`Image#onLoadEnd`] (https://facebook.github.io/react-native/docs/image#onloadend)
             console.log('Image#onLoadEnd: hiding SplashScreen');
@@ -61,7 +61,7 @@ ${error.stack}`));
 
   async cacheResourcesAsync() {
     const images = [
-      require('./assets/splash.png'),
+      require('./assets/splash2.png'),
       require('./assets/LoginBackground.png'),
       require('./assets/SignupBackground.png'),
     ];

@@ -35,7 +35,7 @@ export default class Login extends Component {
     }
     else {
       //login function code here
-      link = "http://192.168.15.34/TWM_Api/fetchTeacherId.php?name="+email+"&password="+password
+      link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeacherId.php?name="+email+"&password="+password
       console.log(link)
       axios.get(link).then((result) => {
         console.log(result.data)

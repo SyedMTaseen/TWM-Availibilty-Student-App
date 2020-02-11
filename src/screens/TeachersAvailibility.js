@@ -10,7 +10,8 @@ import {
     ScrollView,
     FlatList,
     ActivityIndicator,
-    AsyncStorage
+    AsyncStorage,
+    Alert
 }
     from 'react-native';
 
@@ -73,7 +74,7 @@ class TeachersAvailibility extends Component {
     }
     fetchdata = async (day) => {
         this.setState({ loading: true })
-        link = "http://192.168.15.34/TWM_Api/fetchTeacherAvailibilityViaId.php?teacher_id="+this.state.TeacherId
+        link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeacherAvailibilityViaId.php?teacher_id=" + this.state.TeacherId
         console.log(link)
         axios.get(link).then((result) => {
             // console.log(result.data)
@@ -115,7 +116,37 @@ class TeachersAvailibility extends Component {
         this.setState({ DATA: newData, loading: false })
         //  console.log(newData)
     }
+    LogoutAskAlert = (props) => {
+        Alert.alert(
+            "Wait a second!",
+            'Are you sure you want to log out?',
+            [
+                {
+                    text: 'No',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                { text: 'Yes', onPress: () => this.logout(props) },
+            ],
+            { cancelable: false },
+        );
 
+    }
+    logout = async (props) => {
+
+        try {
+
+            await AsyncStorage.setItem('AVATeacherID', "asd");
+          
+                    setTimeout(() => {
+                        this.props.navigation.navigate("SignInScreen")
+                    }, 500);
+              
+
+        } catch (error) {
+            // Error saving data
+        }
+    }
 
     changecolor = (day) => {
 
@@ -179,7 +210,7 @@ class TeachersAvailibility extends Component {
         var Slot = item.time
 
         if (item.active) {
-            link = "http://192.168.15.34/TWM_Api/deleteAvailability.php?teacher_id="+this.state.TeacherId+"&day=" + Day + "&slot=" + Slot
+            link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/deleteAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
             console.log(link)
             axios.get(link).then((result) => {
                 console.log(result.data)
@@ -188,7 +219,7 @@ class TeachersAvailibility extends Component {
             //  alert(Slot+" deleted "+Day)
 
         } else {
-            link = "http://192.168.15.34/TWM_Api/insertAvailability.php?teacher_id="+this.state.TeacherId+"&day=" + Day + "&slot=" + Slot
+            link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/insertAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
             console.log(link)
             axios.get(link).then((result) => {
                 console.log(result.data)
@@ -207,7 +238,7 @@ class TeachersAvailibility extends Component {
                         <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>
                             Your
                         </Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this.LogoutAskAlert}>
                             <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#d66278', paddingRight: '3%' }}>
                                 Logout
                         </Text>
@@ -271,7 +302,7 @@ class TeachersAvailibility extends Component {
                     </ScrollView>
                 </View>
                 <View style={{ flex: 2.5, backgroundColor: '#F0F0F0', }}>
-                    {this.state.loading ? <ActivityIndicator size='large' color="#0ca9dd" /> :
+                    {this.state.loading ? <ActivityIndicator size='large' color="#2B7C87" /> :
                         <FlatList showsVerticalScrollIndicator={false}
                             data={this.state.DATA}
                             keyExtractor={(item, index) => item.id}
