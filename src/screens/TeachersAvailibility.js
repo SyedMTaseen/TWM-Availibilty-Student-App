@@ -137,11 +137,11 @@ class TeachersAvailibility extends Component {
         try {
 
             await AsyncStorage.setItem('AVATeacherID', "asd");
-          
-                    setTimeout(() => {
-                        this.props.navigation.navigate("SignInScreen")
-                    }, 500);
-              
+
+            setTimeout(() => {
+                this.props.navigation.navigate("SignInScreen")
+            }, 500);
+
 
         } catch (error) {
             // Error saving data
@@ -248,6 +248,12 @@ class TeachersAvailibility extends Component {
                         <Text style={{ fontSize: 24, fontWeight: 'bold', fontFamily: 'Roboto' }}>
                             Availability
                         </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ width: 20, height: 20, backgroundColor: "#2B7C87", borderRadius: 5 }}></View>
+                            <Text style={{ fontSize: 12, color: '#2B7C87', fontWeight: 'bold', fontFamily: 'Roboto', paddingLeft: 6 }}>
+                                Mark Free Slot
+                            </Text>
+                        </View>
                         {/* <TouchableOpacity>
                             <View style={{ height: '50%', backgroundColor: '#C4C4C4', borderRadius: 20, alignItems: 'center', justifyContent: 'center', }}>
                                 <Text style={{ fontSize: 9, color: '#2B7C87', padding: 6 }}>
@@ -311,7 +317,7 @@ class TeachersAvailibility extends Component {
                                     <TouchableOpacity
                                         onPress={() => { this.onPressCard(item) }}
                                         style={{ width: '90%', height: 90, backgroundColor: item.active ? "#2B7C87" : 'white', borderRadius: 20, alignItems: 'center', justifyContent: "center", elevation: 5, alignSelf: 'center' }}>
-                                        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                                        <Text style={{ fontSize: 24, fontWeight: 'bold',color:  item.active ?"white":"black"}}>
                                             {item.time}
                                         </Text>
                                     </TouchableOpacity>
