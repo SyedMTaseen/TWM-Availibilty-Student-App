@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
-  TextInput
+  TextInput,
+  ActivityIndicator
 }
   from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,11 +28,12 @@ class TeachersList extends Component {
         { id: 2, name: 'Sir Syed Muhammad Maaz', subject: 'Anime' },
       ],
       FullData: [],
-      DATAS: []
+      DATAS: [],
+      loading: false
     })
   }
   componentDidMount = () => {
-
+    this.setState({ loading: true })
     link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeachersList.php"
     console.log(link)
     axios.get(link).then((result) => {
@@ -43,7 +45,7 @@ class TeachersList extends Component {
       }
       console.log(listData)
 
-      this.setState({ DATAS: listData, FullData: listData })
+      this.setState({ DATAS: listData, FullData: listData,loading:false })
 
 
     })
@@ -105,31 +107,34 @@ class TeachersList extends Component {
         </View>
         <View style={{ flex: 2.5, backgroundColor: '#F0F0F0', paddingTop: '8%', paddingHorizontal: '7%' }}>
 
-          {this.state.DATAS.length <= 0 ? <View style={{ flex: 0.3, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{
+          {this.state.loading ? <ActivityIndicator size='large' color="#2B7C87" /> :
+            <View>
+              {this.state.DATAS.length <= 0 ? <View style={{ flex: 0.3, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{
 
-              fontSize: 18.6,
-              fontWeight: "800",
-              fontStyle: "normal",
-              color: "#444444",
-              alignSelf: 'center'
-            }}>We couldn't find anything.</Text>
-          </View> :
-            <FlatList showsVerticalScrollIndicator={false}
-              data={this.state.DATAS}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) =>
-                <View style={{ marginBottom: '7%' }}>
-                  <TouchableOpacity style={{ height: 55, width: '100%', backgroundColor: 'white', borderRadius: 20, justifyContent: "center" }} onPress={() => { this.PassTeacherItem(item) }}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: '7%' }}>
-                      {item.name}
-                    </Text>
-                    <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2B7C87', paddingHorizontal: '7%' }}>
-                      {item.department}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              } />}
+                  fontSize: 18.6,
+                  fontWeight: "800",
+                  fontStyle: "normal",
+                  color: "#444444",
+                  alignSelf: 'center'
+                }}>We couldn't find anything.</Text>
+              </View> :
+                <FlatList showsVerticalScrollIndicator={false}
+                  data={this.state.DATAS}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item }) =>
+                    <View style={{ marginBottom: '7%' }}>
+                      <TouchableOpacity style={{ height: 55, width: '100%', backgroundColor: 'white', borderRadius: 20, justifyContent: "center" }} onPress={() => { this.PassTeacherItem(item) }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', paddingHorizontal: '7%' }}>
+                          {item.name}
+                        </Text>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2B7C87', paddingHorizontal: '7%' }}>
+                          {item.department}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  } />}
+            </View>}
         </View>
       </View>
     );

@@ -57,26 +57,26 @@ class TeachersAvailibility extends Component {
         })
     }
     componentDidMount = async () => {
-        const TeacherID = await AsyncStorage.getItem('AVATeacherID');
-        this.setState({ TeacherId: TeacherID }, () => {
-            var d = new Date();
-            var n = d.getDay();
-            console.log(n)
-            if (n.length > 5) {
-                this.fetchdata("Monday")
-            } else {
-                console.log(this.state.DaysList[n - 1])
-                this.fetchdata(this.state.DaysList[n - 1])
-            }
+        // const TeacherID = await AsyncStorage.getItem('AVATeacherID');
+        // this.setState({ TeacherId: TeacherID }, () => {
+        var d = new Date();
+        var n = d.getDay();
+        console.log(n)
+        if (n.length > 5) {
+            this.fetchdata("Monday")
+        } else {
+            console.log(this.state.DaysList[n - 1])
+            this.fetchdata(this.state.DaysList[n - 1])
+        }
 
-        })
+        //     })
 
 
 
     }
     fetchdata = async (day) => {
         this.setState({ loading: true })
-        link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeacherAvailibilityViaId.php?teacher_id=" + this.state.TeacherId
+        link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeacherAvailibilityViaId.php?teacher_id=" + this.state.TeacherID
         console.log(link)
         axios.get(link).then((result) => {
             // console.log(result.data)
@@ -85,7 +85,7 @@ class TeachersAvailibility extends Component {
             for (var i = 0; i < len; i++) {
                 listData.push(result.data.server_response[i].teacher_availability)
             }
-            //   console.log(listData)
+            console.log(listData)
 
             this.setState({ TotalData: listData })
             this.changecolor(day)
@@ -108,7 +108,7 @@ class TeachersAvailibility extends Component {
                 }
             }
             if (!Update) {
-                newData.push(this.state.DefaultDATA[j])
+                //  newData.push(this.state.DefaultDATA[j])
 
             }
             Update = false
@@ -139,11 +139,11 @@ class TeachersAvailibility extends Component {
         try {
 
             await AsyncStorage.setItem('AVATeacherID', "asd");
-          
-                    setTimeout(() => {
-                        this.props.navigation.navigate("SignInScreen")
-                    }, 500);
-              
+
+            setTimeout(() => {
+                this.props.navigation.navigate("SignInScreen")
+            }, 500);
+
 
         } catch (error) {
             // Error saving data
@@ -240,6 +240,7 @@ class TeachersAvailibility extends Component {
                         <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>
                             {this.state.TeacherName}
                         </Text>
+
                         {/* <TouchableOpacity onPress={this.LogoutAskAlert}>
                             <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#d66278', paddingRight: '3%' }}>
                                 Logout
@@ -250,6 +251,12 @@ class TeachersAvailibility extends Component {
                         <Text style={{ fontSize: 24, fontWeight: 'bold', fontFamily: 'Roboto' }}>
                             Availability
                         </Text>
+                        {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ width: 20, height: 20, backgroundColor: "#2B7C87", borderRadius: 5 }}></View>
+                            <Text style={{ fontSize: 12, color: '#2B7C87',fontWeight: 'bold', fontFamily: 'Roboto', paddingLeft: 6 }}>
+                                 Busy Slots
+                            </Text>
+                        </View> */}
                         {/* <TouchableOpacity>
                             <View style={{ height: '50%', backgroundColor: '#C4C4C4', borderRadius: 20, alignItems: 'center', justifyContent: 'center', }}>
                                 <Text style={{ fontSize: 9, color: '#2B7C87', padding: 6 }}>
@@ -304,23 +311,34 @@ class TeachersAvailibility extends Component {
                     </ScrollView>
                 </View>
                 <View style={{ flex: 2.5, backgroundColor: '#F0F0F0', }}>
-                    {this.state.loading ? <ActivityIndicator size='large' color="#2B7C87" /> :
-                        <FlatList showsVerticalScrollIndicator={false}
-                            data={this.state.DATA}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item }) =>
-                                <View style={{ marginTop: '8%' }}>
-                                <View
-                              
-                                     //   onPress={() => { this.onPressCard(item) }}
-                                        style={{ width: '90%', height: 90, backgroundColor: item.active ? "#2B7C87" : 'white', borderRadius: 20, alignItems: 'center', justifyContent: "center", elevation: 5, alignSelf: 'center' }}>
-                                        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
-                                            {item.time}
-                                        </Text>
-                           
-                                 </View>
-                                </View>
-                            } />}
+                    {this.state.DATA.length <= 0 ? <View style={{ flex: 0.3, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text style={{
+
+                            fontSize: 18.6,
+                            fontWeight: "800",
+                            fontStyle: "normal",
+                            color: "#444444",
+                            alignSelf: 'center'
+                        }}>Not available this day.</Text>
+                    </View> :
+                        <View>
+                            {this.state.loading ? <ActivityIndicator size='large' color="#2B7C87" /> :
+                                <FlatList showsVerticalScrollIndicator={false}
+                                    data={this.state.DATA}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item }) =>
+                                        <View style={{ marginTop: '6%', marginBottom: "2%" }}>
+                                            <View
+                                                //   onPress={() => { this.onPressCard(item) }}
+                                                style={{ width: '90%', height: 90, backgroundColor: item.active ? 'white' : "#2B7C87", borderRadius: 20, alignItems: 'center', justifyContent: "center", elevation: 5, alignSelf: 'center' }}>
+                                                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                                                    {item.time}
+                                                </Text>
+
+                                            </View>
+                                        </View>
+                                    } />}
+                        </View>}
                 </View>
             </View>
         );
