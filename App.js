@@ -37,9 +37,9 @@ ${error.stack}`));
     }
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1,backgroundColor:"#D2D2D2", }}>
         {this.state.Notactive ? <Image
-          style={{ width: width, height: height, alignSelf: 'center', }}
+          style={{ width: width, height: height, alignSelf: 'center',}}
           source={require('./assets/splash2.png')}
           onLoadEnd={() => {
             // wait for image's content to fully load [`Image#onLoadEnd`] (https://facebook.github.io/react-native/docs/image#onloadend)

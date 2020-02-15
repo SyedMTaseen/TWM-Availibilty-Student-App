@@ -34,7 +34,7 @@ class TeachersList extends Component {
   }
   componentDidMount = () => {
     this.setState({ loading: true })
-    link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeachersList.php"
+    link = "http://7hpowersolutions.com/UstadNow/fetchTeachersList.php"
     console.log(link)
     axios.get(link).then((result) => {
       console.log(result.data)
@@ -45,7 +45,7 @@ class TeachersList extends Component {
       }
       console.log(listData)
 
-      this.setState({ DATAS: listData, FullData: listData,loading:false })
+      this.setState({ DATAS: listData, FullData: listData, loading: false })
 
 
     })
@@ -80,18 +80,28 @@ class TeachersList extends Component {
         <View style={{ flex: 1, }}>
           <View style={{ justifyContent: 'center', marginTop: '7%', paddingHorizontal: '7%' }}>
             <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>
-                Find Teachers'
+              <View>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#777777' }}>
+                  Find Teachers'
                         </Text>
+                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                  Availability
+                        </Text>
+
+
+              </View>
+              <Image
+                            style={{ width: 120, height: 50 }}
+                            source={require('../../assets/logotransparent.png')}
+                            resizeMode="contain"
+                        />
               {/* <TouchableOpacity>
                 <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#d66278' }}>
                   Logout
                         </Text>
               </TouchableOpacity> */}
             </View>
-            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
-              Availability
-                        </Text>
+
           </View>
           <View style={{ height: "20%" }}></View>
           <View style={{ marginHorizontal: '7%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#F0F0F0', borderRadius: 20, paddingHorizontal: '4%', height: "20%" }}>

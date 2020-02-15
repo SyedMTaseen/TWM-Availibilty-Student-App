@@ -62,7 +62,7 @@ class TeachersAvailibility extends Component {
         var d = new Date();
         var n = d.getDay();
         console.log(n)
-        if (n.length > 5) {
+        if (n > 5) {
             this.fetchdata("Monday")
         } else {
             console.log(this.state.DaysList[n - 1])
@@ -76,7 +76,7 @@ class TeachersAvailibility extends Component {
     }
     fetchdata = async (day) => {
         this.setState({ loading: true })
-        link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeacherAvailibilityViaId.php?teacher_id=" + this.state.TeacherID
+        link = "http://7hpowersolutions.com/UstadNow/fetchTeacherAvailibilityViaId.php?teacher_id=" + this.state.TeacherID
         console.log(link)
         axios.get(link).then((result) => {
             // console.log(result.data)
@@ -212,7 +212,7 @@ class TeachersAvailibility extends Component {
         var Slot = item.time
 
         if (item.active) {
-            link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/deleteAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
+            link = "http://7hpowersolutions.com/UstadNow/deleteAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
             console.log(link)
             axios.get(link).then((result) => {
                 console.log(result.data)
@@ -221,7 +221,7 @@ class TeachersAvailibility extends Component {
             //  alert(Slot+" deleted "+Day)
 
         } else {
-            link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/insertAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
+            link = "http://7hpowersolutions.com/UstadNow/insertAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
             console.log(link)
             axios.get(link).then((result) => {
                 console.log(result.data)
@@ -330,7 +330,7 @@ class TeachersAvailibility extends Component {
                                         <View style={{ marginTop: '6%', marginBottom: "2%" }}>
                                             <View
                                                 //   onPress={() => { this.onPressCard(item) }}
-                                                style={{ width: '90%', height: 90, backgroundColor: item.active ? 'white' : "#2B7C87", borderRadius: 20, alignItems: 'center', justifyContent: "center", elevation: 5, alignSelf: 'center' }}>
+                                                style={{ width: '90%', height: 90, backgroundColor: item.active ? 'white' : "#2B7C87", borderRadius: 20, alignItems: 'center', justifyContent: "center", alignSelf: 'center' }}>
                                                 <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
                                                     {item.time}
                                                 </Text>
