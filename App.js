@@ -39,6 +39,7 @@ ${error.stack}`));
     return (
       <View style={{ flex: 1,backgroundColor:"#D2D2D2", }}>
         {this.state.Notactive ? <Image
+        resizeMode="contain"
           style={{ width: width, height: height, alignSelf: 'center',}}
           source={require('./assets/splash2.png')}
           onLoadEnd={() => {
