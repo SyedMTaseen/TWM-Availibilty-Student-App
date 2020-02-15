@@ -11,7 +11,7 @@ const SwithStartNavigator = createSwitchNavigator({
     Auth: AuthLogin,
 
     SignInScreen: Login,
-    // SignUpScreen: SignUp,
+    SignUpScreen: SignUp,
     Main: TeacherAvailibilityContainer
 
 

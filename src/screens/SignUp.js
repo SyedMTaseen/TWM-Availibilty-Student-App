@@ -1,11 +1,12 @@
 import React, { Component, useState, useEffect } from 'react'
-import { View, Text, StyleSheet, ImageBackground, Dimensions, TextInput, TouchableOpacity, KeyboardAvoidingView, Modal, Keyboard, Platform } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, Dimensions, TextInput, TouchableOpacity, KeyboardAvoidingView, Modal, Keyboard, Platform,AsyncStorage,ActivityIndicator } from 'react-native'
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const fieldErr = `Some Fields are Empty \n Please fill them first`;
 const background = require('../../assets/SignupBackground.png')
 const os = Platform.OS === 'android';
 const screenHeight = Math.round(Dimensions.get('window').height);
+import axios from 'axios';
 export default class Signup extends Component {
 
 
@@ -21,7 +22,12 @@ export default class Signup extends Component {
         modal: false,
         errText: '',
         scroll: true,
-        keyboard: false
+        keyboard: false,
+        showPassword: true,
+        loading:false,
+    }
+    toggleSwitch = () => {
+        this.setState({ showPassword: !this.state.showPassword });
     }
     Layout() {
         return (
@@ -40,6 +46,7 @@ export default class Signup extends Component {
                             onBlur={() => this.showErr('nameVal', this.state.name)}
                             onChangeText={(e) => this.getVariable(e, 'name')}
                             style={styles.inputs}
+                            autoCapitalize="none"
                             placeholderTextColor="white"
                             placeholder='Full Name' />
                         <FontAwesome name='user' color='white' size={25} />
@@ -51,6 +58,7 @@ export default class Signup extends Component {
                             onChangeText={(e) => this.getVariable(e, 'email')}
                             style={styles.inputs}
                             placeholderTextColor="white"
+                            autoCapitalize="none"
                             placeholder='NU Email' />
                         <MaterialIcons name='email' size={25} color='white' />
                     </View>
@@ -61,10 +69,13 @@ export default class Signup extends Component {
                             onBlur={() => this.showErr('passwordVal', this.state.password)}
                             onChangeText={(e) => this.getVariable(e, 'password')}
                             style={styles.inputs}
-                            secureTextEntry={true}
+                            secureTextEntry={this.state.showPassword}
                             placeholderTextColor="white"
+                            autoCapitalize="none"
                             placeholder='Password' />
-                        <Ionicons name='ios-lock' size={25} color='white' />
+                           {this.state.showPassword ?
+                        <Ionicons onPress={this.toggleSwitch} name="md-eye-off" size={25} color="white" /> : <Ionicons onPress={this.toggleSwitch} name="md-eye" size={25} color="#fff" />}
+   
                     </View>
                     <Text style={this.state.passwordVal ? styles.unhide : styles.hide}>Password cannot be left empty</Text>
 
@@ -74,6 +85,7 @@ export default class Signup extends Component {
                             onChangeText={(e) => this.getVariable(e, 'faculty')}
                             style={styles.inputs}
                             placeholderTextColor="white"
+                            autoCapitalize="none"
                             placeholder='Faculty' />
                         <MaterialIcons name='face' color='white' size={25} />
                     </View>
@@ -84,7 +96,8 @@ export default class Signup extends Component {
                         <TouchableOpacity
                             onPress={this.signUp.bind(this)}
                             style={styles.btn}>
-                            <Ionicons color='white' name='ios-arrow-dropright-circle' size={60} />
+                                  {this.state.loading ? <ActivityIndicator size='large' color="#fff" /> :
+                            <Ionicons color='white' name='ios-arrow-dropright-circle' size={60} />}
                         </TouchableOpacity>
                     </View>
                     <View style={this.state.keyboard && os ? styles.keySigninLinkView : styles.signinLinkView}>
@@ -129,13 +142,56 @@ export default class Signup extends Component {
             this.setState({ [variable]: false });
     }
     signUp() {
+        this.setState({loading:true})
         const { name, email, password, faculty } = this.state;
         if (email === '' || email === ' ' || name === '' || name === ' ' || password === '' || password === ' ' || faculty === '' || faculty === ' ') {
             this.setState({ errText: fieldErr, modal: true })
+            this.setState({loading:false})
         }
         else {
             //signUp code here
+            link = "http://7hpowersolutions.com/UstadNow/insertTeacher.php?name="+name+"&password="+password+"&department="+faculty+"&email="+email
+            console.log(link)
+            axios.get(link).then((result) => {
+                console.log(result.data)
+                if (result.data.server_response == "Teacher registeration successfully!") {
+                    alert("Registration successfully!")
+                    link = "http://7hpowersolutions.com/UstadNow/fetchTeacherId.php?email=" + email + "&password=" + password
+                    console.log(link)
+                    axios.get(link).then((result) => {
+                        console.log(result.data)
+                        if (result.data.server_response == "") {
+                            this.setState({loading:false})
+                            // this.setState({ errText: "Wrong email or password\n Please try again", modal: true });
+                        } else {
+                            var TeacherID = result.data.server_response[0].teacher_detail.teacher_id
+                            console.log(TeacherID)
+                            this._storeData(TeacherID)
+                            this.setState({loading:false})
+                        }
+                    })
+
+                } else {
+                    this.setState({ errText: "Registration failed \n Please try again", modal: true });
+                    this.setState({loading:false})
+                }
+            })
         }
+    }
+    _storeData = async (id) => {
+
+
+        try {
+
+            await AsyncStorage.setItem('AVATeacherID', id);
+
+            this.setState({ loading: false })
+            this.props.navigation.navigate('Main')
+
+        } catch (error) {
+
+        }
+
     }
     componentDidMount() {
         this.keyboardDidShowListener = Keyboard.addListener(

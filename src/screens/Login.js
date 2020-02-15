@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StatusBar, View, Text, StyleSheet, ImageBackground, TextInput,Dimensions, TouchableOpacity, Modal, Platform,Keyboard,KeyboardAvoidingView, KeyboardAvoidingViewBase ,AsyncStorage} from 'react-native'
+import { StatusBar, View, Text, StyleSheet, ImageBackground, TextInput,Dimensions, TouchableOpacity, Modal, Platform,Keyboard,KeyboardAvoidingView, ActivityIndicator ,AsyncStorage} from 'react-native'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const background = require('../../assets/LoginBackground.png')
@@ -17,6 +17,7 @@ export default class Login extends Component {
     errText: '',
     scroll: false,
     keyboard:false,
+    loading:false,
   }
 
   getVariable(text, variable) {
@@ -29,23 +30,27 @@ export default class Login extends Component {
       this.setState({ [variable]: false });
   }
   signIn() {
+    this.setState({loading:true})
     const { email, password } = this.state;
     if ((email === ' ' || email === '') || (password === '' || password === ' ')) {
       this.setState({ errText: "Some Fields are Empty \n Please fill them first", modal: true });
+      this.setState({loading:false})
     }
     else {
       //login function code here
-      link = "https://smustufaqadri.000webhostapp.com/Ustad%20Now/fetchTeacherId.php?name="+email+"&password="+password
+      link = "http://7hpowersolutions.com/UstadNow/fetchTeacherId.php?email="+email+"&password="+password
       console.log(link)
       axios.get(link).then((result) => {
         console.log(result.data)
         if(result.data.server_response=="")
         {
           this.setState({ errText: "Wrong email or password\n Please try again", modal: true });
+          this.setState({loading:false})
         }else{
                var TeacherID=result.data.server_response[0].teacher_detail.teacher_id
                console.log(TeacherID)
                this._storeData(TeacherID)
+               this.setState({loading:false})
 
    
         }
@@ -134,26 +139,27 @@ export default class Login extends Component {
             <TouchableOpacity
               onPress={this.signIn.bind(this)}
               style={styles.btn}>
-              <Ionicons color='#2B7C87' name='ios-arrow-dropright-circle' size={70} />
+                {this.state.loading ? <ActivityIndicator size='large' color="#2B7C87" /> :
+              <Ionicons color='#2B7C87' name='ios-arrow-dropright-circle' size={70} />}
             </TouchableOpacity>
           </View>
 
         </View>
-        {/* <View style={(this.state.keyboard && os )? styles.keySignupLinkView :styles.signupLinkView}>
+        <View style={(this.state.keyboard && os )? styles.keySignupLinkView :styles.signupLinkView}>
           <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUpScreen')}>
             <Text style={styles.signinLink}>
               Sign Up
                             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={this.forgetPassword.bind(this)}
           >
             <Text style={styles.signinLink}>
               Forget Password
                             </Text>
-          </TouchableOpacity>
-        </View> */}
+          </TouchableOpacity> */}
+        </View>
         <Modal
           animationType='fade'
           transparent={true}
