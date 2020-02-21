@@ -11,12 +11,14 @@ import {
   ScrollView,
   FlatList,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 }
   from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
 import axios from 'axios';
+const { width, height } = Dimensions.get('screen');
 class TeachersList extends Component {
 
 
@@ -131,6 +133,7 @@ class TeachersList extends Component {
               </View> :
                 <FlatList showsVerticalScrollIndicator={false}
                   data={this.state.DATAS}
+                  contentContainerStyle={{ paddingBottom: width/4 }}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item }) =>
                     <View style={{ marginBottom: '7%' }}>

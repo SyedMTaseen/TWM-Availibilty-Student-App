@@ -21,8 +21,21 @@
       "fallbackToCacheTimeout": 0
     },
      "android": {
-      "package": "com.skynners.TWMStudent",
-      "versionCode": 1
+      "package": "com.TWMFast.TWMStudent",
+      "versionCode": 1,
+      "permissions": [
+        "VIBRATE",
+        "WAKE_LOCK",
+        "com.anddoes.launcher.permission.UPDATE_COUNT",
+        "com.android.launcher.permission.INSTALL_SHORTCUT",
+        "com.google.android.c2dm.permission.RECEIVE",
+        "com.google.android.gms.permission.ACTIVITY_RECOGNITION",
+        "com.google.android.providers.gsf.permission.READ_GSERVICES",
+        "com.htc.launcher.permission.READ_SETTINGS",
+        "com.htc.launcher.permission.UPDATE_SHORTCUT",
+        "com.majeur.launcher.permission.UPDATE_BADGE",
+        "com.sonyericsson.home.permission.BROADCAST_BADGE"
+      ]
       
       
       
@@ -32,7 +45,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.skynners.TWMStudent",
+      "bundleIdentifier": "com.TWMFast.TWMStudent",
       "buildNumber": "1"
     }
   }

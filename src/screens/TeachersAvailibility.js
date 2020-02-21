@@ -103,12 +103,12 @@ class TeachersAvailibility extends Component {
             for (var i = 0; i < len; i++) {
                 if (this.state.DefaultDATA[j].time == this.state.TotalData[i].slot && this.state.TotalData[i].day == Day) {
                     var itemData = { id: this.state.DefaultDATA[j].id, time: this.state.DefaultDATA[j].time, active: true }
-                    newData.push(itemData)
+                  //  newData.push(itemData)
                     Update = true
                 }
             }
             if (!Update) {
-                //  newData.push(this.state.DefaultDATA[j])
+                  newData.push(this.state.DefaultDATA[j])
 
             }
             Update = false
@@ -330,7 +330,7 @@ class TeachersAvailibility extends Component {
                                         <View style={{ marginTop: '6%', marginBottom: "2%" }}>
                                             <View
                                                 //   onPress={() => { this.onPressCard(item) }}
-                                                style={{ width: '90%', height: 90, backgroundColor: item.active ? 'white' : "#2B7C87", borderRadius: 20, alignItems: 'center', justifyContent: "center", alignSelf: 'center' }}>
+                                                style={{ width: '90%', height: 90, backgroundColor:'white' , borderRadius: 20, alignItems: 'center', justifyContent: "center", alignSelf: 'center' }}>
                                                 <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
                                                     {item.time}
                                                 </Text>
