@@ -36,7 +36,7 @@ class TeachersList extends Component {
   }
   componentDidMount = () => {
     this.setState({ loading: true })
-    link = "http://7hpowersolutions.com/UstadNow/fetchTeachersList.php"
+    link = "http://smustufaqadri.flavorsomemeals.com/UstadNow/fetchTeachersList.php"
     console.log(link)
     axios.get(link).then((result) => {
       console.log(result.data)

@@ -76,7 +76,7 @@ class TeachersAvailibility extends Component {
     }
     fetchdata = async (day) => {
         this.setState({ loading: true })
-        link = "http://7hpowersolutions.com/UstadNow/fetchTeacherAvailibilityViaId.php?teacher_id=" + this.state.TeacherID
+        link = "http://smustufaqadri.flavorsomemeals.com/UstadNow/fetchTeacherAvailibilityViaId.php?teacher_id=" + this.state.TeacherID
         console.log(link)
         axios.get(link).then((result) => {
             // console.log(result.data)
@@ -212,7 +212,7 @@ class TeachersAvailibility extends Component {
         var Slot = item.time
 
         if (item.active) {
-            link = "http://7hpowersolutions.com/UstadNow/deleteAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
+            link = "http://smustufaqadri.flavorsomemeals.com/UstadNow/deleteAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
             console.log(link)
             axios.get(link).then((result) => {
                 console.log(result.data)
@@ -221,7 +221,7 @@ class TeachersAvailibility extends Component {
             //  alert(Slot+" deleted "+Day)
 
         } else {
-            link = "http://7hpowersolutions.com/UstadNow/insertAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
+            link = "http://smustufaqadri.flavorsomemeals.com/UstadNow/insertAvailability.php?teacher_id=" + this.state.TeacherId + "&day=" + Day + "&slot=" + Slot
             console.log(link)
             axios.get(link).then((result) => {
                 console.log(result.data)

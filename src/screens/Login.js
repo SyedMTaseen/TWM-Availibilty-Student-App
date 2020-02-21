@@ -35,7 +35,7 @@ export default class Login extends Component {
     }
     else {
       //login function code here
-      link = "http://7hpowersolutions.com/UstadNow/fetchTeacherId.php?name="+email+"&password="+password
+      link = "http://smustufaqadri.flavorsomemeals.com/UstadNow/fetchTeacherId.php?name="+email+"&password="+password
       console.log(link)
       axios.get(link).then((result) => {
         console.log(result.data)
